@@ -17,13 +17,19 @@ describe('/threads endpoint', () => {
     await ThreadsTableTestHelper.cleanTable();
     await CommentsTableTestHelper.cleanTable();
 
-    // Add user directly using helper
-    await UsersTableTestHelper.addUser({
-      id: 'user-123',
-      username: 'dicoding',
-      password: 'secret',
-      fullname: 'Dicoding Indonesia',
+    // Register user first
+    const registerResponse = await server.inject({
+      method: 'POST',
+      url: '/users',
+      payload: {
+        username: 'dicoding',
+        password: 'secret',
+        fullname: 'Dicoding Indonesia',
+      },
     });
+
+    const registerResponseJson = JSON.parse(registerResponse.payload);
+    userId = registerResponseJson.data.addedUser.id;
 
     // Then login to get access token
     const loginResponse = await server.inject({
@@ -37,7 +43,6 @@ describe('/threads endpoint', () => {
 
     const responseJson = JSON.parse(loginResponse.payload);
     accessToken = responseJson.data.accessToken;
-    userId = 'user-123';
   });
 
   afterAll(async () => {
