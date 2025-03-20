@@ -12,19 +12,20 @@ describe('/threads endpoint', () => {
   beforeAll(async () => {
     const server = await createServer(container);
 
-    // Add user and get access token
-    const userPayload = {
+    // Clean up first
+    await UsersTableTestHelper.cleanTable();
+    await ThreadsTableTestHelper.cleanTable();
+    await CommentsTableTestHelper.cleanTable();
+
+    // Add user directly using helper
+    await UsersTableTestHelper.addUser({
+      id: 'user-123',
       username: 'dicoding',
       password: 'secret',
       fullname: 'Dicoding Indonesia',
-    };
-
-    await server.inject({
-      method: 'POST',
-      url: '/users',
-      payload: userPayload,
     });
 
+    // Then login to get access token
     const loginResponse = await server.inject({
       method: 'POST',
       url: '/authentications',
@@ -34,11 +35,9 @@ describe('/threads endpoint', () => {
       },
     });
 
-    const { data: { accessToken: token } } = JSON.parse(loginResponse.payload);
-    accessToken = token;
-
-    const users = await UsersTableTestHelper.findUsersById('user-123');
-    userId = users[0].id;
+    const responseJson = JSON.parse(loginResponse.payload);
+    accessToken = responseJson.data.accessToken;
+    userId = 'user-123';
   });
 
   afterAll(async () => {
@@ -48,6 +47,7 @@ describe('/threads endpoint', () => {
   afterEach(async () => {
     await ThreadsTableTestHelper.cleanTable();
     await CommentsTableTestHelper.cleanTable();
+    await UsersTableTestHelper.cleanTable();
   });
 
   describe('when POST /threads', () => {
