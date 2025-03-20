@@ -18,14 +18,11 @@ describe('/threads endpoint', () => {
     await CommentsTableTestHelper.cleanTable();
 
     // Add user directly using helper
-    await server.inject({
-      method: 'POST',
-      url: '/users',
-      payload: {
-        username: 'dicoding',
-        password: 'secret',
-        fullname: 'Dicoding Indonesia',
-      },
+    await UsersTableTestHelper.addUser({
+      id: 'user-123',
+      username: 'dicoding',
+      password: 'secret',
+      fullname: 'Dicoding Indonesia',
     });
 
     // Then login to get access token
@@ -103,7 +100,7 @@ describe('/threads endpoint', () => {
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(400);
       expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena properti yang dibutuhkan tidak ada');
+      expect(responseJson.message).toEqual("\"body\" is required");
     });
 
     it('should response 400 when request payload not meet data type specification', async () => {
@@ -128,7 +125,7 @@ describe('/threads endpoint', () => {
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(400);
       expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena tipe data tidak sesuai');
+      expect(responseJson.message).toEqual("\"body\" must be a string");
     });
 
     it('should response 401 when request not contain access token', async () => {

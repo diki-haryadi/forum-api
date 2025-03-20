@@ -5,7 +5,10 @@ const Validator = {
   validateThreadPayload: (payload) => {
     const validationResult = ThreadPayloadSchema.validate(payload);
     if (validationResult.error) {
-      throw new InvariantError(validationResult.error.message);
+      if (validationResult.error.details[0].type === 'any.required') {
+        throw new InvariantError('tidak dapat membuat thread baru karena properti yang dibutuhkan tidak ada');
+      }
+      throw new InvariantError('tidak dapat membuat thread baru karena tipe data tidak sesuai');
     }
   },
   validateCommentPayload: (payload) => {
