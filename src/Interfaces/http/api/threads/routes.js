@@ -27,6 +27,11 @@ const routes = (handler) => ([
     method: 'GET',
     path: '/threads/{threadId}',
     handler: (request) => handler.getThreadDetailHandler(request),
+    options: {
+      auth: {
+        mode: 'try',
+      },
+    },
   },
 ]);
 
