@@ -6,7 +6,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - PGHOST=${PGHOST}
+      - PGHOST=${PGHOST:-103.150.93.88}
       - PGUSER=${POSTGRES_USER}
       - PGPASSWORD=${POSTGRES_PASSWORD}
       - PGDATABASE=${POSTGRES_DB}
