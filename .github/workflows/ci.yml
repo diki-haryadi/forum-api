@@ -38,14 +38,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run database migrations
-        run: npm run migrate:test up
-        env:
-          PGHOST: ${{ secrets.PGHOST }}
-          PGUSER: ${{ secrets.POSTGRES_USER }}
-          PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          PGDATABASE: ${{ secrets.POSTGRES_DB }}
-          PGPORT: 5432
+      # - name: Run database migrations
+      #   run: npm run migrate:test up
+      #   env:
+      #     PGHOST: ${{ secrets.PGHOST }}
+      #     PGUSER: ${{ secrets.POSTGRES_USER }}
+      #     PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      #     PGDATABASE: ${{ secrets.POSTGRES_DB }}
+      #     PGPORT: 5432
           
       - name: Run tests
         run: npm run test
