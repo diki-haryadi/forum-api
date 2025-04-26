@@ -76,6 +76,99 @@ A RESTful API for a forum application built with Node.js, Hapi.js, and PostgreSQ
 
 API documentation is available in the Postman collection located in the `docs` folder.
 
+### API Endpoints
+
+#### Threads
+
+##### Create New Thread
+```bash
+curl -X POST 'http://localhost:5000/threads' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer <access_token>' \
+-d '{
+    "title": "Judul Thread",
+    "body": "Isi konten thread"
+}'
+```
+
+##### Add Comment to Thread
+```bash
+curl -X POST 'http://localhost:5000/threads/{threadId}/comments' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer <access_token>' \
+-d '{
+    "content": "Isi komentar"
+}'
+```
+
+##### Delete Comment
+```bash
+curl -X DELETE 'http://localhost:5000/threads/{threadId}/comments/{commentId}' \
+-H 'Authorization: Bearer <access_token>'
+```
+
+##### Get Thread Detail
+```bash
+curl -X GET 'http://localhost:5000/threads/{threadId}'
+```
+
+```bash
+curl -X POST \
+  http://localhost:5000/users \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "username": "johndoe",
+    "password": "secret",
+    "fullname": "John Doe"
+}'
+```
+
+#### Authentications
+
+##### Login
+```bash
+curl -X POST 'http://localhost:5000/authentications' \
+-H 'Content-Type: application/json' \
+-d '{
+    "username": "johndoe",
+    "password": "secret"
+}'
+```
+
+##### Refresh Access Token
+```bash
+curl -X PUT 'http://localhost:5000/authentications' \
+-H 'Content-Type: application/json' \
+-d '{
+    "refreshToken": "refresh_token_here"
+}'
+```
+
+##### Logout
+```bash
+curl -X DELETE 'http://localhost:5000/authentications' \
+-H 'Content-Type: application/json' \
+-d '{
+    "refreshToken": "refresh_token_here"
+}'
+```
+
+Note:
+- Replace `{threadId}` with the actual thread ID
+- Replace `{commentId}` with the actual comment ID
+- Replace `<access_token>` with a valid JWT token
+- Replace `refresh_token_here` with the actual refresh token
+- Default port used is 5000
+
+curl -X POST \
+  http://localhost:5000/users \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "username": "johndoe",
+    "password": "secret",
+    "fullname": "John Doe"
+}'
+
 ## Project Structure
 
 ```
