@@ -1,0 +1,14 @@
+FROM nginx:alpine
+
+# Buat direktori untuk sertifikat SSL
+RUN mkdir -p /etc/nginx/ssl
+
+# Salin file konfigurasi nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expose port HTTP dan HTTPS
+EXPOSE 80
+EXPOSE 443
+
+# Jalankan nginx di foreground
+CMD ["nginx", "-g", "daemon off;"]
