@@ -4,15 +4,15 @@ services:
   app:
     build: .
     expose:
-      - "5000"
-    environment:
-      - PGHOST=${PGHOST:-103.150.93.88}
-      - PGUSER=${POSTGRES_USER}
-      - PGPASSWORD=${POSTGRES_PASSWORD}
-      - PGDATABASE=${POSTGRES_DB}
-      - PGPORT=5432
-      - ACCESS_TOKEN_KEY=${ACCESS_TOKEN_KEY}
-      - REFRESH_TOKEN_KEY=${REFRESH_TOKEN_KEY}
+      - "5000:5000"
+    # environment:
+    #   - PGHOST=${PGHOST:-103.150.93.88}
+    #   - PGUSER=${POSTGRES_USER}
+    #   - PGPASSWORD=${POSTGRES_PASSWORD}
+    #   - PGDATABASE=${POSTGRES_DB}
+    #   - PGPORT=5432
+    #   - ACCESS_TOKEN_KEY=${ACCESS_TOKEN_KEY}
+    #   - REFRESH_TOKEN_KEY=${REFRESH_TOKEN_KEY}
     restart: unless-stopped
     networks:
       - app-network
