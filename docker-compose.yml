@@ -4,6 +4,8 @@ services:
   app:
     build: .
     expose:
+      - "5000"
+    ports:
       - "5000:5000"
     # environment:
     #   - PGHOST=${PGHOST:-103.150.93.88}
