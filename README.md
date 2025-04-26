@@ -84,7 +84,7 @@ API documentation is available in the Postman collection located in the `docs` f
 ```bash
 curl -X POST 'http://localhost:5000/threads' \
 -H 'Content-Type: application/json' \
--H 'Authorization: Bearer <access_token>' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpZCI6InVzZXItdU1PN3l3UXA0YlVraVdXNkRJOVlCIiwiaWF0IjoxNzQ1Njg2MzYyfQ.XpJnXWsa2jTtV4ZVVfFSXXYnpxYpnVZIvVZPSPm2jBw' \
 -d '{
     "title": "Judul Thread",
     "body": "Isi konten thread"
@@ -95,7 +95,7 @@ curl -X POST 'http://localhost:5000/threads' \
 ```bash
 curl -X POST 'http://localhost:5000/threads/{threadId}/comments' \
 -H 'Content-Type: application/json' \
--H 'Authorization: Bearer <access_token>' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpZCI6InVzZXItdU1PN3l3UXA0YlVraVdXNkRJOVlCIiwiaWF0IjoxNzQ1Njg2MzYyfQ.XpJnXWsa2jTtV4ZVVfFSXXYnpxYpnVZIvVZPSPm2jBw' \
 -d '{
     "content": "Isi komentar"
 }'
@@ -104,7 +104,7 @@ curl -X POST 'http://localhost:5000/threads/{threadId}/comments' \
 ##### Delete Comment
 ```bash
 curl -X DELETE 'http://localhost:5000/threads/{threadId}/comments/{commentId}' \
--H 'Authorization: Bearer <access_token>'
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpZCI6InVzZXItdU1PN3l3UXA0YlVraVdXNkRJOVlCIiwiaWF0IjoxNzQ1Njg2MzYyfQ.XpJnXWsa2jTtV4ZVVfFSXXYnpxYpnVZIvVZPSPm2jBw'
 ```
 
 ##### Get Thread Detail

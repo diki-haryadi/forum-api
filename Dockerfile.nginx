@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM nginx:alpine AS build
 
 # Buat direktori untuk sertifikat SSL
 RUN mkdir -p /etc/nginx/ssl
@@ -9,6 +9,17 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Expose port HTTP dan HTTPS
 EXPOSE 80
 EXPOSE 443
+
+RUN apk add --no-cache certbot
+
+# Jalankan certbot untuk mendapatkan sertifikat SSL
+RUN certbot certonly --webroot -w /var/www/html -d forum-api.haryadi.my.id --non-interactive --agree-tos -m unpam.dik@gmail.com
+
+FROM nginx:alpine AS runtime
+
+# Salin file konfigurasi nginx dari tahap build
+COPY --from=build /etc/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /etc/nginx/ssl /etc/nginx/ssl
 
 # Jalankan nginx di foreground
 CMD ["nginx", "-g", "daemon off;"]
