@@ -56,7 +56,7 @@ describe('/users endpoint', () => {
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(400);
       expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toEqual('tidak dapat membuat user baru karena properti yang dibutuhkan tidak ada');
+      expect(responseJson.message).toEqual('\"username\" is required');
     });
 
     it('should response 400 when request payload not meet data type specification', async () => {
@@ -79,7 +79,7 @@ describe('/users endpoint', () => {
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(400);
       expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toEqual('tidak dapat membuat user baru karena tipe data tidak sesuai');
+      expect(responseJson.message).toEqual("\"fullname\" must be a string");
     });
 
     it('should response 400 when username more than 50 character', async () => {

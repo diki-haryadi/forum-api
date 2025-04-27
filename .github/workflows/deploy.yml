@@ -1,0 +1,73 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Verify SSH connection
+        run: |
+          # Create SSH config to disable strict host checking
+          mkdir -p ~/.ssh
+          echo -e "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null\n" > ~/.ssh/config
+          chmod 600 ~/.ssh/config
+          
+          # Add server to known hosts explicitly
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+          
+          # Test connection with verbose output
+          ssh -v ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} 'echo "SSH connection successful"'
+
+      - name: Deploy to VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USERNAME: ${{ secrets.VPS_USERNAME }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          ACCESS_TOKEN_KEY: ${{ secrets.ACCESS_TOKEN_KEY }}
+          REFRESH_TOKEN_KEY: ${{ secrets.REFRESH_TOKEN_KEY }}
+        run: |
+          # Testing target directory creation
+          echo "Creating directory on VPS..."
+          ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} 'mkdir -p ~/forum-api'
+          
+          # Copy deployment files
+          echo "Copying deployment files..."
+          scp docker-compose.yml ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:~/forum-api/
+          scp Dockerfile ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:~/forum-api/
+          
+          # Create and copy .env file
+          echo "Creating .env file..."
+          cat > .env << EOF
+          POSTGRES_USER=$POSTGRES_USER
+          POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+          POSTGRES_DB=$POSTGRES_DB
+          ACCESS_TOKEN_KEY=$ACCESS_TOKEN_KEY
+          REFRESH_TOKEN_KEY=$REFRESH_TOKEN_KEY
+          EOF
+          
+          scp .env ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:~/forum-api/
+          
+          # Execute deployment commands
+          echo "Running deployment commands..."
+          ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'ENDSSH'
+            cd ~/forum-api
+            docker-compose down || true
+            docker-compose pull
+            docker-compose up -d
+            sleep 10
+            docker-compose exec -T app npm run migrate up || echo "Migration failed but continuing"
+          ENDSSH

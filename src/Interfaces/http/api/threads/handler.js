@@ -1,3 +1,5 @@
+const Validator = require('../../../../validator/validator');
+
 class ThreadsHandler {
   constructor({
     addThreadUseCase,
@@ -9,9 +11,15 @@ class ThreadsHandler {
     this._addCommentUseCase = addCommentUseCase;
     this._deleteCommentUseCase = deleteCommentUseCase;
     this._getThreadDetailUseCase = getThreadDetailUseCase;
+
+    this.postThreadHandler = this.postThreadHandler.bind(this);
+    this.postCommentHandler = this.postCommentHandler.bind(this);
+    this.deleteCommentHandler = this.deleteCommentHandler.bind(this);
+    this.getThreadDetailHandler = this.getThreadDetailHandler.bind(this);
   }
 
   async postThreadHandler(request, h) {
+    Validator.validateThreadPayload(request.payload);
     const { id: userId } = request.auth.credentials;
     const addedThread = await this._addThreadUseCase.execute(request.payload, userId);
 
@@ -26,6 +34,7 @@ class ThreadsHandler {
   }
 
   async postCommentHandler(request, h) {
+    Validator.validateCommentPayload(request.payload);
     const { id: userId } = request.auth.credentials;
     const { threadId } = request.params;
     const addedComment = await this._addCommentUseCase.execute(request.payload, threadId, userId);

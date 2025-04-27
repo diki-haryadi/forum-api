@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    expose:
+      - "5000"
+    ports:
+      - "5000:5000"
+    # environment:
+    #   - PGHOST=${PGHOST:-103.150.93.88}
+    #   - PGUSER=${POSTGRES_USER}
+    #   - PGPASSWORD=${POSTGRES_PASSWORD}
+    #   - PGDATABASE=${POSTGRES_DB}
+    #   - PGPORT=5432
+    #   - ACCESS_TOKEN_KEY=${ACCESS_TOKEN_KEY}
+    #   - REFRESH_TOKEN_KEY=${REFRESH_TOKEN_KEY}
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - app
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
